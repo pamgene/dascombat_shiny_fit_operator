@@ -1,11 +1,11 @@
 library(shiny)
-library(tercen)
-library(tim) # tercen/tim
-library(dplyr)
-library(tidyr)
-library(reshape2)
-library(ggplot2)
-source("R/core.R")
+library(tercen) # tercen API
+library(tim) # tercen/tim for get_serialized_result()
+library(dplyr) # data manipulation
+library(tidyr) # data manipulation
+library(reshape2) # data manipulation
+library(ggplot2) # plotting
+
 source("R/pgcombat.R")
 
 
@@ -19,6 +19,7 @@ getCtx <- function(session) {
 }
 ####
 ############################################
+# User Interface
 
 ui <- shinyUI(fluidPage(sidebarLayout(
   sidebarPanel(
@@ -45,63 +46,29 @@ ui <- shinyUI(fluidPage(sidebarLayout(
   mainPanel(plotOutput("pca"))
 )))
 
+# Server Interface
+
 server <- shinyServer(function(input, output, session, context) {
   dataInput <- reactive({
     getValues(session)
   })
   
-  # output$body = renderUI({
-  #   sidebarLayout(
-  #     sidebarPanel(
-  #       checkboxInput("applymode", "Apply saved model", FALSE),
-  #       conditionalPanel(
-  #         condition = "!input.applymode",
-  #         checkboxInput("useref", "Use a reference batch", value = FALSE),
-  #         conditionalPanel(
-  #           condition = 'input.useref',
-  #           selectInput("refbatch", "Select reference variable", choices = list())
-  #         ),
-  #         selectInput("modeltype", "Type of model", choices =  c("L/S", "L")),
-  #         checkboxInput("returnlink", "Return link to Combat model", value = FALSE)
-  #       ),
-  #       conditionalPanel(
-  #         condition = "input.applymode",
-  #         selectInput(
-  #           "modlink",
-  #           "Select factor containing the model link",
-  #           choices = list()
-  #         )
-  #       ),
-  #       actionButton("done", "Done"),
-  #       verbatimTextOutput("status")
-  #     ),
-  #     mainPanel(plotOutput("pca"))
-  #   )
-  # })
-  
-  #getRunFolderReactive = context$getRunFolder()
-  #getStepFolderReactive = context$getFolder()
-  #getDataReactive = context$getData()
-  
+
   observe({
-    #getData = getDataReactive$value
+    # Check if we can obtain data
+    
     getData = dataInput
     if (is.null(getData))
       return()
     
-    #getRunFolder = getRunFolderReactive$value
-    #if (is.null(getRunFolder))
-    #  return()
-    
-    #getStepFolder = getStepFolderReactive$value
-    #if (is.null(getStepFolder))
-    #  return()
-    
+    # Obtain data
     bndata = getData()
     df = bndata$data
     
-    print('Looking for data')
+    print('Exploring data (debug purposes)')
     print(df)
+    
+    #TO-DO: check if checks are really neccessary
     #if (!bndata$hasColors) {
     #  stop("Need exactly 1 data color for the batch variable or model link")
     #}
@@ -110,6 +77,7 @@ server <- shinyServer(function(input, output, session, context) {
     #  stop("Need exactly 1 data color for the batch variable or model link")
     #}
     
+    # Modify data including colors
     df = bndata$data
     df$bv = as.factor(bndata$ctx$select(bndata$ctx$colors))
     
@@ -242,14 +210,6 @@ server <- shinyServer(function(input, output, session, context) {
           )
           result = AnnotatedData$new(data = dfXc, metadata = mdf)
         } else {
-          #modellink = file.path(getRunFolder(), "modellink.RData")
-          #save(file = modellink, aCom)
-          #dfXc = data.frame(dfXc, modellink = as.character(modellink))
-          #mdf = data.frame(
-          #  labelDescription = c("rowSeq", "colSeq", "CmbCor", "modellink"),
-          #  groupingType = c("rowSeq", "colSeq", "QuantitationType", "Array")
-          #)
-          #result = AnnotatedData$new(data = dfXc, metadata = mdf)
           print('Saving data and model...')
           
           # serialize data and return back

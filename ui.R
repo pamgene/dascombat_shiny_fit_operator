@@ -8,7 +8,7 @@ library(ggplot2) # plotting
 
 source("R/pgcombat.R")
 
-shinyUI(fluidPage(sidebarLayout(
+ui <- shinyUI(fluidPage(sidebarLayout(
   sidebarPanel(
     checkboxInput("applymode", "Apply saved model", FALSE),
     conditionalPanel(

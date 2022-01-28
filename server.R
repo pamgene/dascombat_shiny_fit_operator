@@ -23,7 +23,7 @@ getCtx <- function(session) {
 ####
 ############################################
 
-server <- shinyServer(function(input, output, session, context) {
+server <- shinyServer(function(input, output, session) {
   dataInput <- reactive({
     getValues(session)
   })

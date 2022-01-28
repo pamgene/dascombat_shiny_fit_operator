@@ -1,16 +1,34 @@
 library(shiny)
+library(tercen) # tercen API
+library(tim) # tercen/tim for get_serialized_result()
+library(dplyr) # data manipulation
+library(tidyr) # data manipulation
+library(reshape2) # data manipulation
+library(ggplot2) # plotting
 
-shinyUI(fluidPage(
-  
-  titlePanel("Histogram"),
-  
+source("R/pgcombat.R")
+
+shinyUI(fluidPage(sidebarLayout(
   sidebarPanel(
-    sliderInput("plotWidth", "Plot width (px)", 200, 2000, 500),
-    sliderInput("plotHeight", "Plot height (px)", 200, 2000, 500),
+    checkboxInput("applymode", "Apply saved model", FALSE),
+    conditionalPanel(
+      condition = "!input.applymode",
+      checkboxInput("useref", "Use a reference batch", value = FALSE),
+      conditionalPanel(
+        condition = 'input.useref',
+        selectInput("refbatch", "Select reference variable", choices = list())
+      ),
+      selectInput("modeltype", "Type of model", choices =  c("L/S", "L")),
+      checkboxInput("returnlink", "Return link to Combat model", value = FALSE)
+    ),
+    conditionalPanel(
+      condition = "input.applymode",
+      selectInput("modlink",
+                  "Select factor containing the model link",
+                  choices = list())
+    ),
+    actionButton("done", "Done"),
+    verbatimTextOutput("status")
   ),
-  
-  mainPanel(
-    uiOutput("reacOut")
-  )
-  
-))
+  mainPanel(plotOutput("pca"))
+)))

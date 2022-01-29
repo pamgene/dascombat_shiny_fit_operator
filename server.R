@@ -196,7 +196,7 @@ server <- shinyServer(function(input, output, session) {
             ctx = getCtx(session)
           )
           
-          #getCtx(session)$save(res)
+          getCtx(session)$save(res)
           
           print('Saved data and model...')
           

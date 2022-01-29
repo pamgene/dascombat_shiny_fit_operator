@@ -179,7 +179,7 @@ server <- shinyServer(function(input, output, session) {
         dfXc = melt(Xc, value.name = "CmbCor")
         dfXc$rowSeq = as.double(dfXc$rowSeq)
         dfXc$colSeq = as.double(dfXc$colSeq)
-        if (!bLink | input$applymode) {
+        if (!input$returnlink | input$applymode) {
           mdf = data.frame(
             labelDescription = c("rowSeq", "colSeq", "CmbCor"),
             groupingType = c("rowSeq", "colSeq", "QuantitationType")
@@ -189,14 +189,14 @@ server <- shinyServer(function(input, output, session) {
           print('Saving data and model...')
           
           # serialize data and return back
-          res <- get_serialized_result(
-            df = df,
-            object = aCom,
-            object_name = "dascombat_model",
-            ctx = getCtx(session)
-          )
+          #res <- get_serialized_result(
+          #  df = df,
+          #  object = aCom,
+          #  object_name = "dascombat_model",
+          #  ctx = getCtx(session)
+          #)
           
-          getCtx(session)$save(res)
+          #getCtx(session)$save(res)
           
           print('Saved data and model...')
           

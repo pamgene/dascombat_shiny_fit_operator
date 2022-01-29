@@ -54,10 +54,10 @@ server <- shinyServer(function(input, output, session) {
     
     # Modify data including colors
     df = bndata$data
-    df$bv = as.factor(bndata$ctx$select(bndata$ctx$colors))
+    df$bv = as.factor(getCtx(session)$select(getCtx(session)$colors))
     
     lab = paste("Select reference batch from the values in",
-                bndata$ctx$colors)
+                getCtx(session)$colors)
     updateSelectInput(session,
                       "refbatch",
                       label = lab,
@@ -183,7 +183,7 @@ server <- shinyServer(function(input, output, session) {
             labelDescription = c("rowSeq", "colSeq", "CmbCor"),
             groupingType = c("rowSeq", "colSeq", "QuantitationType")
           )
-          result = AnnotatedData$new(data = dfXc, metadata = mdf)
+          result = dfXc
         } else {
           print('Saving data and model...')
           
@@ -192,10 +192,10 @@ server <- shinyServer(function(input, output, session) {
             df = bndata$data,
             object = aCom,
             object_name = "dascombat_model",
-            ctx = bndata$ctx
+            ctx = getCtx(session)
           )
           
-          bndata$ctx$save(res)
+          getCtx(session)$save(res)
           
           print('Saved data and model...')
           

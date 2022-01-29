@@ -208,7 +208,7 @@ server <- shinyServer(function(input, output, session, context) {
             labelDescription = c("rowSeq", "colSeq", "CmbCor"),
             groupingType = c("rowSeq", "colSeq", "QuantitationType")
           )
-          result = AnnotatedData$new(data = dfXc, metadata = mdf)
+          result = dfXc
         } else {
           print('Saving data and model...')
           

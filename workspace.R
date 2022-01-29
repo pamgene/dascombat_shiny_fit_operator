@@ -221,6 +221,8 @@ server <- shinyServer(function(input, output, session, context) {
             ctx = bndata$ctx
           )
           
+          browser()
+          
           bndata$ctx$save(res)
           
           print('Saved data and model...')

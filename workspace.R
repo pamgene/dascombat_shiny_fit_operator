@@ -7,7 +7,7 @@ library(reshape2) # data manipulation
 library(ggplot2) # plotting
 
 source("R/pgcombat.R")
-
+options(shiny.error = browser)
 
 ############################################
 # http://localhost:5402/admin/w/55b87c4ed069d42cc8d1e1efde0155af/ds/8ae9d32e-2799-4e93-864a-a79e348cbddf
@@ -203,6 +203,7 @@ server <- shinyServer(function(input, output, session, context) {
         dfXc = melt(Xc, value.name = "CmbCor")
         dfXc$rowSeq = as.double(dfXc$rowSeq)
         dfXc$colSeq = as.double(dfXc$colSeq)
+        browser()
         if (!bLink | input$applymode) {
           mdf = data.frame(
             labelDescription = c("rowSeq", "colSeq", "CmbCor"),

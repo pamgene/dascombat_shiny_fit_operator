@@ -7,6 +7,7 @@ library(reshape2) # data manipulation
 library(ggplot2) # plotting
 
 source("R/pgcombat.R")
+options(shiny.error = browser)
 
 ui <- shinyUI(fluidPage(sidebarLayout(
   sidebarPanel(

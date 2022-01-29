@@ -189,12 +189,12 @@ server <- shinyServer(function(input, output, session) {
           print('Saving data and model...')
           
           # serialize data and return back
-          #res <- get_serialized_result(
-          #  df = df,
-          #  object = aCom,
-          #  object_name = "dascombat_model",
-          #  ctx = getCtx(session)
-          #)
+          res <- get_serialized_result(
+            df = df,
+            object = aCom,
+            object_name = "dascombat_model",
+            ctx = getCtx(session)
+          )
           
           #getCtx(session)$save(res)
           

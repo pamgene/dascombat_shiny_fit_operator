@@ -169,6 +169,11 @@ server <- shinyServer(function(input, output, session) {
       isolate({
         bLink = input$returnlink
       })
+      
+      req(input$done)
+      req(input$applymode)
+      req(input$returnlink)
+      
       if (input$done > 0) {
         if (!input$applymode) {
           aCom = comfit()

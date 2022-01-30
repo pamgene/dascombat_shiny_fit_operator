@@ -54,7 +54,6 @@ server <- shinyServer(function(input, output, session) {
     #}
     
     # Modify data including colors
-    df = bndata$data
     df$bv = as.factor(getCtx(session)$select(getCtx(session)$colors))
     
     lab = paste("Select reference batch from the values in",
@@ -165,6 +164,23 @@ server <- shinyServer(function(input, output, session) {
       return(prt)
     })
     
+    observeEvent(input$done, {
+      print('Saving data and model...')
+      ctx <- getCtx(session)
+      
+      # serialize data and return back
+      #browser()
+      res <- tim::get_serialized_result(
+        df = df,
+        object = comfit(),
+        object_name = "dascombat_model",
+        ctx = ctx
+      )
+      
+      #saveRDS(res, file = "my_data.rds")
+      ctx$save(res)
+    })
+    
     output$status = renderText({
       isolate({
         bLink = input$returnlink
@@ -172,10 +188,6 @@ server <- shinyServer(function(input, output, session) {
       
       print('Inputtt')
       print(input)
-      
-      req(input$done)
-      req(input$applymode)
-      req(input$returnlink)
       
       if (input$done > 0) {
         if (!input$applymode) {
@@ -194,22 +206,22 @@ server <- shinyServer(function(input, output, session) {
           )
           result = dfXc
         } else {
-          print('Saving data and model...')
-          ctx <- getCtx(session)
+          #print('Saving data and model...')
+          #ctx <- getCtx(session)
           
           # serialize data and return back
-          res <- tim::get_serialized_result(
-            df = df,
-            object = comfit(),
-            object_name = "dascombat_model",
-            ctx = ctx
-          )
+          #browser()
+          #res <- tim::get_serialized_result(
+          #  df = df,
+          #  object = comfit(),
+          #  object_name = "dascombat_model",
+          #  ctx = ctx
+          #)
           
           #saveRDS(res, file = "my_data.rds")
+          #ctx$save(res)
           
-          ctx$save(res)
-          
-          print('Saved data and model...')
+          #print('Saved data and model...')
           
         }
         #settings = settingsTable()

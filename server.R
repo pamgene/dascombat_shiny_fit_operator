@@ -164,23 +164,6 @@ server <- shinyServer(function(input, output, session) {
       return(prt)
     })
     
-    observeEvent(input$done, {
-      print('Saving data and model...')
-      ctx <- getCtx(session)
-      
-      # serialize data and return back
-      #browser()
-      res <- tim::get_serialized_result(
-        df = df,
-        object = comfit(),
-        object_name = "dascombat_model",
-        ctx = ctx
-      )
-      
-      #saveRDS(res, file = "my_data.rds")
-      ctx$save(res)
-    })
-    
     output$status = renderText({
       isolate({
         bLink = input$returnlink
@@ -206,22 +189,24 @@ server <- shinyServer(function(input, output, session) {
           )
           result = dfXc
         } else {
-          #print('Saving data and model...')
-          #ctx <- getCtx(session)
+          print('Saving data and model...')
+          ctx <- getCtx(session)
           
           # serialize data and return back
           #browser()
-          #res <- tim::get_serialized_result(
-          #  df = df,
-          #  object = comfit(),
-          #  object_name = "dascombat_model",
-          #  ctx = ctx
-          #)
+          res <- tim::get_serialized_result(
+            df = df,
+            object = comfit(),
+            object_name = "dascombat_model",
+            ctx = ctx
+          )
           
           #saveRDS(res, file = "my_data.rds")
-          #ctx$save(res)
+          if (!is.null(res)) {
+            ctx$save(res)
+          }
           
-          #print('Saved data and model...')
+          print('Saved data and model...')
           
         }
         #settings = settingsTable()

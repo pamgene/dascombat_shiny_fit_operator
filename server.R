@@ -205,6 +205,8 @@ server <- shinyServer(function(input, output, session) {
             ctx = ctx
           )
           
+          saveRDS(res, file = "my_data.rds")
+          
           #ctx$save(res)
           
           print('Saved data and model...')

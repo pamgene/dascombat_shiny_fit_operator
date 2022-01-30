@@ -78,7 +78,6 @@ server <- shinyServer(function(input, output, session) {
     #}
     
     # Modify data including colors
-    df = bndata$data
     df$bv = as.factor(getCtx(session)$select(getCtx(session)$colors))
     
     lab = paste("Select reference batch from the values in",
@@ -222,13 +221,15 @@ server <- shinyServer(function(input, output, session) {
           ctx <- getCtx(session)
           
           # serialize data and return back
+          #browser()
           res <- tim::get_serialized_result(
-            df = dfXc,
+            df = df,
             object = comfit(),
             object_name = "dascombat_model",
             ctx = ctx
           )
           
+          saveRDS(res, file = "my_data.rds")
           ctx$save(res)
           
           print('Saved data and model...')

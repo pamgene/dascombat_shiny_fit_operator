@@ -170,9 +170,12 @@ server <- shinyServer(function(input, output, session) {
         bLink = input$returnlink
       })
       
-      req(input$done)
-      req(input$applymode)
-      req(input$returnlink)
+      print('Inputtt')
+      print(input)
+      
+      #req(input$done)
+      #req(input$applymode)
+      #req(input$returnlink)
       
       if (input$done > 0) {
         if (!input$applymode) {
@@ -196,7 +199,7 @@ server <- shinyServer(function(input, output, session) {
           
           # serialize data and return back
           res <- tim::get_serialized_result(
-            df = df,
+            df = dfXc,
             object = comfit(),
             object_name = "dascombat_model",
             ctx = ctx

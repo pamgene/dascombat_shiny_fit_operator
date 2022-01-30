@@ -48,12 +48,12 @@ ui <- shinyUI(fluidPage(sidebarLayout(
 
 # Server Interface
 
-server <- shinyServer(function(input, output, session, context) {
+server <- shinyServer(function(input, output, session) {
   dataInput <- reactive({
     getValues(session)
   })
   
-
+  
   observe({
     # Check if we can obtain data
     
@@ -79,10 +79,10 @@ server <- shinyServer(function(input, output, session, context) {
     
     # Modify data including colors
     df = bndata$data
-    df$bv = as.factor(bndata$ctx$select(bndata$ctx$colors))
+    df$bv = as.factor(getCtx(session)$select(getCtx(session)$colors))
     
     lab = paste("Select reference batch from the values in",
-                bndata$ctx$colors)
+                getCtx(session)$colors)
     updateSelectInput(session,
                       "refbatch",
                       label = lab,
@@ -193,6 +193,14 @@ server <- shinyServer(function(input, output, session, context) {
       isolate({
         bLink = input$returnlink
       })
+      
+      print('Inputtt')
+      print(input)
+      
+      #req(input$done)
+      #req(input$applymode)
+      #req(input$returnlink)
+      
       if (input$done > 0) {
         if (!input$applymode) {
           aCom = comfit()
@@ -203,8 +211,7 @@ server <- shinyServer(function(input, output, session, context) {
         dfXc = melt(Xc, value.name = "CmbCor")
         dfXc$rowSeq = as.double(dfXc$rowSeq)
         dfXc$colSeq = as.double(dfXc$colSeq)
-        browser()
-        if (!bLink | input$applymode) {
+        if (!input$returnlink | input$applymode) {
           mdf = data.frame(
             labelDescription = c("rowSeq", "colSeq", "CmbCor"),
             groupingType = c("rowSeq", "colSeq", "QuantitationType")
@@ -212,18 +219,17 @@ server <- shinyServer(function(input, output, session, context) {
           result = dfXc
         } else {
           print('Saving data and model...')
+          ctx <- getCtx(session)
           
           # serialize data and return back
-          res <- get_serialized_result(
-            df = bndata$data,
-            object = aCom,
+          res <- tim::get_serialized_result(
+            df = dfXc,
+            object = comfit(),
             object_name = "dascombat_model",
-            ctx = bndata$ctx
+            ctx = ctx
           )
           
-          browser()
-          
-          bndata$ctx$save(res)
+          ctx$save(res)
           
           print('Saved data and model...')
           
@@ -238,7 +244,6 @@ server <- shinyServer(function(input, output, session, context) {
     })
   })
 })
-
 
 getValues <- function(session) {
   ctx <- getCtx(session)

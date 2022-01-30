@@ -174,8 +174,8 @@ server <- shinyServer(function(input, output, session) {
       print(input)
       
       req(input$done)
-      #req(input$applymode)
-      #req(input$returnlink)
+      req(input$applymode)
+      req(input$returnlink)
       
       if (input$done > 0) {
         if (!input$applymode) {

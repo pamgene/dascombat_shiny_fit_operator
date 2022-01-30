@@ -196,7 +196,7 @@ server <- shinyServer(function(input, output, session) {
       print('Inputtt')
       print(input)
       
-      #req(input$done)
+      req(input$done)
       #req(input$applymode)
       #req(input$returnlink)
       
@@ -229,7 +229,7 @@ server <- shinyServer(function(input, output, session) {
             ctx = ctx
           )
           
-          saveRDS(res, file = "my_data.rds")
+          #saveRDS(res, file = "my_data.rds")
           ctx$save(res)
           
           print('Saved data and model...')

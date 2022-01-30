@@ -199,7 +199,7 @@ server <- shinyServer(function(input, output, session) {
           
           # serialize data and return back
           res <- tim::get_serialized_result(
-            df = dfXc,
+            df = df,
             object = comfit(),
             object_name = "dascombat_model",
             ctx = ctx

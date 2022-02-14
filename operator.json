@@ -3,5 +3,6 @@
   "description": "DASCombat shiny operator.",
   "tags": ["dascombat"],
   "authors": ["William van Doorn"],
-  "urls": ["https://github.com/tercen/dascombat_shiny_fit_operator"]
+  "urls": ["https://github.com/tercen/dascombat_shiny_fit_operator"],
+  "isViewOnly": false
 }

@@ -7,7 +7,6 @@ library(reshape2) # data manipulation
 library(ggplot2) # plotting
 
 source("R/pgcombat.R")
-options(shiny.error = browser)
 
 ############################################
 #### This part should not be modified
@@ -25,13 +24,12 @@ getCtx <- function(session) {
 ############################################
 
 server <- shinyServer(function(input, output, session) {
+  
   dataInput <- reactive({
     getValues(session)
   })
   
-  
   observe({
-    # Check if we can obtain data
     
     getData = dataInput
     if (is.null(getData))
@@ -39,29 +37,15 @@ server <- shinyServer(function(input, output, session) {
     
     # Obtain data
     bndata = getData()
-    df = bndata$data
-    
-    print('Exploring data (debug purposes)')
-    print(df)
-    
-    #TO-DO: check if checks are really neccessary
-    #if (!bndata$hasColors) {
-    #  stop("Need exactly 1 data color for the batch variable or model link")
-    #}
-    
-    #if (length(bndata$colorColumnNames) > 1) {
-    #  stop("Need exactly 1 data color for the batch variable or model link")
-    #}
-    
-    # Modify data including colors
-    df$bv = as.factor(getCtx(session)$select(getCtx(session)$colors))
+    df     = bndata$data
+    colors = as.factor(getCtx(session)$select(getCtx(session)$colors))
     
     lab = paste("Select reference batch from the values in",
                 getCtx(session)$colors)
     updateSelectInput(session,
                       "refbatch",
                       label = lab,
-                      choices = levels(df$bv))
+                      choices = levels(colors))
     updateSelectInput(session, "modlink", choices = bndata$arrayColumnNames)
     
     lmodel = reactive({
@@ -169,9 +153,6 @@ server <- shinyServer(function(input, output, session) {
         bLink = input$returnlink
       })
       
-      print('Inputtt')
-      print(input)
-      
       if (input$done > 0) {
         if (!input$applymode) {
           aCom = comfit()
@@ -189,11 +170,9 @@ server <- shinyServer(function(input, output, session) {
           )
           result = dfXc
         } else {
-          print('Saving data and model...')
           ctx <- getCtx(session)
           
           # serialize data and return back
-          #browser()
           res <- tim::get_serialized_result(
             df = df,
             object = comfit(),
@@ -201,17 +180,10 @@ server <- shinyServer(function(input, output, session) {
             ctx = ctx
           )
           
-          #saveRDS(res, file = "my_data.rds")
           if (!is.null(res)) {
-            ctx$save(res)
+              ctx$save(res)
           }
-          
-          print('Saved data and model...')
-          
         }
-        #settings = settingsTable()
-        #save(file = file.path(getRunFolder(), "runSettings.RData"), settings)
-        #context$setResult(result)
         return("Done")
       } else {
         return(".")
@@ -219,7 +191,6 @@ server <- shinyServer(function(input, output, session) {
     })
   })
 })
-
 
 getValues <- function(session) {
   ctx <- getCtx(session)

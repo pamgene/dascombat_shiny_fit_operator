@@ -24,6 +24,17 @@ getCtx <- function(session) {
 ####
 ############################################
 
+get_model_from_name <- function(ctx, model_name) {
+  schema = find_schema_by_factor_name(ctx, model_name)
+  table = ctx$client$tableSchemaService$select(schema$id,
+                                               Map(function(x)
+                                                 x$name, schema$columns),
+                                               0,
+                                               schema$nRows)
+  
+  lapply(as_tibble(table)[[".base64.serialized.r.model"]], deserialize_from_string)[[1]]
+}
+
 server <- shinyServer(function(input, output, session) {
   dataInput <- reactive({
     getValues(session)
@@ -88,27 +99,27 @@ server <- shinyServer(function(input, output, session) {
       return(cmod)
     })
     
-    modfile = reactive({
-      mfile = levels(factor(df[[input$modlink]]))
-      bFile = file.exists(mfile)
-      if (!any(bFile))
-        stop("Model link not found")
-      mfile = mfile[bFile]
-      if (length(mfile) > 1)
-        stop("Incorrect model link")
-      return(mfile)
-      
+    getmodel = reactive({
+      #mfile = levels(factor(df[[input$modlink]]))
+      #bFile = file.exists(mfile)
+      #if (!any(bFile))
+      #  stop("Model link not found")
+      #mfile = mfile[bFile]
+      #if (length(mfile) > 1)
+      #  stop("Incorrect model link")
+      model = get_model_from_name(getCtx(session), getCtx(session)$labels[[1]])
+      #browser()
+      return(model)
     })
     
     comapply = reactive({
-      modlink = modfile()
-      X0 = acast(df, rowSeq ~ colSeq, value.var = "value")
-      bv = acast(df,  rowSeq ~ colSeq, value.var = "bv")[1, ]
+      aCom = getmodel()
+      X0 = acast(df, .ri ~ .ci, value.var = ".y")
+      bv = acast(df,  .ri ~ .ci, value.var = ".color")[1, ]
       bv = droplevels(factor(bv))
-      rowSeq = acast(df,  rowSeq ~ colSeq, value.var = "rowSeq")[, 1]
-      colSeq = acast(df,  rowSeq ~ colSeq, value.var = "colSeq")[1, ]
+      rowSeq = acast(df,  .ri ~ .ci, value.var = ".ri")[, 1]
+      colSeq = acast(df,  .ri ~ .ci, value.var = ".ci")[1, ]
       dimnames(X0) = list(rowSeq = rowSeq, colSeq = colSeq)
-      load(modlink)
       Xc = aCom$apply(X0, bv)
       dimnames(Xc) = dimnames(X0)
       result = list(X0 = X0,
@@ -169,6 +180,8 @@ server <- shinyServer(function(input, output, session) {
         bLink = input$returnlink
       })
       
+      ctx <- getCtx(session)
+      
       print('Inputtt')
       print(input)
       
@@ -190,7 +203,6 @@ server <- shinyServer(function(input, output, session) {
           result = dfXc
         } else {
           print('Saving data and model...')
-          ctx <- getCtx(session)
           
           # serialize data and return back
           #browser()
@@ -209,9 +221,13 @@ server <- shinyServer(function(input, output, session) {
           print('Saved data and model...')
           
         }
-        #settings = settingsTable()
-        #save(file = file.path(getRunFolder(), "runSettings.RData"), settings)
-        #context$setResult(result)
+        
+        result %>%
+          mutate(.ci = 0) %>%
+          mutate(.ri = 0) %>%
+          ctx$addNamespace() %>%
+          ctx$save()
+ 
         return("Done")
       } else {
         return(".")

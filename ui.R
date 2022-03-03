@@ -23,10 +23,7 @@ ui <- shinyUI(fluidPage(sidebarLayout(
       checkboxInput("returnlink", "Return link to Combat model", value = FALSE)
     ),
     conditionalPanel(
-      condition = "input.applymode",
-      selectInput("modlink",
-                  "Select factor containing the model link",
-                  choices = list())
+      condition = "input.applymode"
     ),
     actionButton("done", "Done"),
     verbatimTextOutput("status")

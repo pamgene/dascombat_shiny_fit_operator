@@ -65,14 +65,15 @@ server <- shinyServer(function(input, output, session) {
     #}
     
     # Modify data including colors
-    df$bv = as.factor(getCtx(session)$select(getCtx(session)$colors))
+    df$bv = getCtx(session)$select(getCtx(session)$colors)[[1]]
     
     lab = paste("Select reference batch from the values in",
                 getCtx(session)$colors)
     updateSelectInput(session,
                       "refbatch",
                       label = lab,
-                      choices = levels(df$bv))
+                      choices = unique(df$bv))
+    
     updateSelectInput(session, "modlink", choices = bndata$arrayColumnNames)
     
     lmodel = reactive({
@@ -87,6 +88,7 @@ server <- shinyServer(function(input, output, session) {
       colSeq = acast(df,  .ri ~ .ci, value.var = ".ci")[1, ]
       dimnames(X0) = list(rowSeq = rowSeq, colSeq = colSeq)
       cmod = pgCombat$new()
+      
       if (input$useref) {
         cmod = cmod$fit(X0,
                         bv,

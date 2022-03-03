@@ -178,7 +178,7 @@ pgCombat = R6Class(
       bayesdata <- s.data
       j <- 1
       for (i in batches) {
-        bayesdata[, i] <- (bayesdata[, i] - t(batch.design[i,] %*% gamma.star)) /
+        bayesdata[, i] <- (bayesdata[, i] - t(batch.design[i,] %*% gamma.star)) 
           (sqrt(delta.star[j,]) %*% t(rep(1,
                                           n.batches[j])))
         j <- j + 1
@@ -201,7 +201,7 @@ pgCombat = R6Class(
     
     apply = function(dat, batch) {
       if (is.null(self$batches))
-        stop("Empty combat model, use pgCombat::fit before using apply")
+        stop("Empty combat model, use pgCombat:fit before using apply")
       batch = as.factor(batch)
       if (length(batch) != dim(dat)[2])
         stop("Data matrix and batch variable don't match.")

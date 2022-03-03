@@ -4,16 +4,18 @@
 
 The `dascombat_shiny_fit_operator` is the Shiny version of the oeprator to obtain 
 a fitted model based on the DasCOMBAT software developed at PamGene. 
-This fitted model can then be used to make predictions in the `dascombat_prediction_operator`.
+This fitted model can then be used to make predictions in the using the `Apply Saved Model`
+option in this operator.
 
 ##### Usage
 
 Input projection|.
 ---|---
-`y-axis`        | type, description 
+`y-axis`        | values
 `row`           | type, description 
 `column`        | type, description 
-`colors`        | type, description 
+`colors`        | the reference batches
+`labels` (optional) | contains the saved model
 
 Output relations|.
 ---|---

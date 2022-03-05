@@ -225,8 +225,8 @@ server <- shinyServer(function(input, output, session) {
         }
         
         result %>%
-          mutate(.ci = 0) %>%
-          mutate(.ri = 0) %>%
+          rename(.ri = rowSeq) %>%
+          rename(.ci = colSeq) %>%
           ctx$addNamespace() %>%
           ctx$save()
  

@@ -203,13 +203,23 @@ server <- shinyServer(function(input, output, session) {
             groupingType = c("rowSeq", "colSeq", "QuantitationType")
           )
           result = dfXc
+          
+          result %>%
+            rename(.ri = rowSeq) %>%
+            rename(.ci = colSeq) %>%
+            ctx$addNamespace() %>%
+            ctx$save()
+          
         } else {
           print('Saving data and model...')
+          result = dfXc %>%
+            rename(.ri = rowSeq) %>%
+            rename(.ci = colSeq)
           
           # serialize data and return back
           #browser()
           res <- tim::get_serialized_result(
-            df = df,
+            df = result,
             object = comfit(),
             object_name = "dascombat_model",
             ctx = ctx
@@ -224,12 +234,6 @@ server <- shinyServer(function(input, output, session) {
           
         }
         
-        result %>%
-          rename(.ri = rowSeq) %>%
-          rename(.ci = colSeq) %>%
-          ctx$addNamespace() %>%
-          ctx$save()
- 
         return("Done")
       } else {
         return(".")

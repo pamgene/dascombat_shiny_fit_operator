@@ -195,8 +195,8 @@ server <- shinyServer(function(input, output, session) {
         }
         Xc = aCom$Xc
         dfXc = melt(Xc, value.name = "CmbCor")
-        dfXc$rowSeq = as.double(dfXc$rowSeq)
-        dfXc$colSeq = as.double(dfXc$colSeq)
+        dfXc$rowSeq = as.integer(dfXc$rowSeq)
+        dfXc$colSeq = as.integer(dfXc$colSeq)
         if (!input$returnlink | input$applymode) {
           mdf = data.frame(
             labelDescription = c("rowSeq", "colSeq", "CmbCor"),

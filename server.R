@@ -213,24 +213,15 @@ server <- shinyServer(function(input, output, session) {
         } else {
           print('Saving data and model...')
           result = dfXc %>%
-            rename(.ri = rowSeq) %>%
-            rename(.ci = colSeq)
-          
-          # serialize data and return back
-          #browser()
-          # res <- tim::get_serialized_result(
-          #   df = result,
-          #   object = comfit(),
-          #   object_name = "dascombat_model",
-          #   ctx = ctx
-          # )
+            rename(.rids = rowSeq) %>%
+            rename(.cids = colSeq)
 
           main_rel <- result %>% 
             ctx$addNamespace() %>%
             as_tibble() %>%
             as_relation() %>%
-            left_join_relation(ctx$crelation, "colSeq", ctx$crelation$rids) %>%
-            left_join_relation(ctx$rrelation, "rowSeq", ctx$rrelation$rids) %>%
+            left_join_relation(ctx$crelation, ".cids", ctx$crelation$rids) %>%
+            left_join_relation(ctx$rrelation, ".rids", ctx$rrelation$rids) %>%
             as_join_operator(c(ctx$cnames, ctx$rnames), c(ctx$cnames, ctx$rnames))
           
           model_rel <- data.frame(

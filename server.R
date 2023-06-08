@@ -213,21 +213,27 @@ server <- shinyServer(function(input, output, session) {
         } else {
           print('Saving data and model...')
           result = dfXc %>%
-            rename(.ri = rowSeq) %>%
-            rename(.ci = colSeq)
+            rename(.rids = rowSeq) %>%
+            rename(.cids = colSeq)
+
+          main_rel <- result %>% 
+            ctx$addNamespace() %>%
+            as_tibble() %>%
+            as_relation() %>%
+            left_join_relation(ctx$crelation, ".cids", ctx$crelation$rids) %>%
+            left_join_relation(ctx$rrelation, ".rids", ctx$rrelation$rids) %>%
+            as_join_operator(c(ctx$cnames, ctx$rnames), c(ctx$cnames, ctx$rnames))
           
-          # serialize data and return back
-          #browser()
-          res <- tim::get_serialized_result(
-            df = result,
-            object = comfit(),
-            object_name = "dascombat_model",
-            ctx = ctx
-          )
-          
+          model_rel <- data.frame(
+            model = "dascombat_model",
+            .base64.serialized.r.model = c(serialize_to_string(comfit()))) %>% 
+            ctx$addNamespace() %>%
+            as_relation() %>%
+            as_join_operator(list(), list())
+
           #saveRDS(res, file = "my_data.rds")
-          if (!is.null(res)) {
-            ctx$save(res)
+          if (!is.null(result)) {
+            save_relation(list(main_rel, model_rel), ctx)
           }
           
           print('Saved data and model...')

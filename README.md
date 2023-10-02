@@ -2,14 +2,11 @@
 
 ##### Description
 
-The `dascombat_shiny_fit_operator` is the Shiny version of the oeprator to obtain 
-a fitted model based on the DasCOMBAT software developed at PamGene. 
-This fitted model can then be used to make predictions in the using the `Apply Saved Model`
-option in this operator.
+The `dascombat_shiny_fit_operator` is the Shiny version of the oeprator to obtain a fitted model based on the DasCOMBAT software developed at PamGene. 
+This fitted model can then be used to make predictions in the using the `Apply Saved Model` option in this operator.
 
 ##### Usage
-The input projection depends on whether the fitting or prediction procedure is used
-in the `dascombat_shiny_fit_operator`. If the fitting procedure is desired, a label
+The input projection depends on whether the fitting or prediction procedure is used in the `dascombat_shiny_fit_operator`. If the fitting procedure is desired, a label
 is not required.
 
 Input projection|.
@@ -20,10 +17,8 @@ Input projection|.
 `colors`        | the reference batches
 `labels` (optional) | contains the saved model
 
-The output projection depends on whether the fitting or prediction procedure is used
-in the `dascombat_shiny_fit_operator`. In case the fitting procedure is desired, the
-Shiny application will return a `model` and a `CmbCor` variable. In case the prediction
-procedure is desired, it will only return a `CmbCor` variable.
+The output projection depends on whether the fitting or prediction procedure is used in the `dascombat_shiny_fit_operator`. In case the fitting procedure is desired, the
+Shiny application will return a `model` and a `CmbCor` variable. In case the prediction procedure is desired, it will only return a `CmbCor` variable.
 
 Output relations|.
 ---|---

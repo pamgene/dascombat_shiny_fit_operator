@@ -172,7 +172,7 @@ server <- shinyServer(function(input, output, session) {
         x = PC1 ,
         y = PC2,
         colour = bv
-      )) + geom_point()
+      )) + geom_point(size = 2.5)
       prt = prt + facet_wrap( ~ stage, scales = "free")
       return(prt)
     })

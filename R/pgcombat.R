@@ -54,6 +54,15 @@ pgCombat = R6Class(
       if (!is.null(ref)) {
         check[ref] <- FALSE
       }
+      
+      # check if any IDs have sd = 0
+      zero_sd_indices <- which(apply(dat, 1, function(row) sd(row) == 0))
+      if (length(zero_sd_indices > 0)){
+        stop(paste0("Error: variables (peptides) with 0 standard deviation! Row indices: ", paste(zero_sd_indices, collapse = ", "), 
+                    ". Please remove them prior to ComBat."))
+      }
+      
+      
       design <- as.matrix(design[,!check])
       # message("Adjusting for", ncol(design) - ncol(batchmod), "covariate(s) or covariate level(s)")
       if (qr(design)$rank < ncol(design)) {

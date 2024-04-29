@@ -2,41 +2,35 @@
 
 ##### Description
 
-The `dascombat_shiny_fit_operator` is the Shiny version of the oeprator to obtain a fitted model based on the DasCOMBAT software developed at PamGene. 
-This fitted model can then be used to make predictions in the using the `Apply Saved Model` option in this operator.
+The `dascombat_shiny_fit_operator` is a software developed at PamGene.
+There are two ways of usage:
+1. Model fitting and applying the model (prediction) is done in 1 step
+2. First model fitting is done on part of the data (usually control samples). Second, this fitted model is used to make predictions on the full dataset.
+In the first step, save the model with the `Return link to Combat model` option. In the second step, use the `Apply saved model` option to apply the fitted model.
 
-##### Usage
-The input projection depends on whether the fitting or prediction procedure is used in the `dascombat_shiny_fit_operator`. If the fitting procedure is desired, a label
-is not required.
+##### Input projection and output relations
+The input projection depends on whether the fitting and prediction procedure is used at once or in two steps. The label is only required in the two-step procedure in the second step.
 
 Input projection|.
 ---|---
-`y-axis`        | the y values
-`row`           | the peptide IDs
-`column`        | the barcodes
-`colors`        | the reference batches
-`labels` (optional) | contains the saved model
+`y-axis`        | normalized (log- or VSN transformed) values (not S100!)
+`row`           | peptide IDs
+`column`        | Single data value per cell, e.g. Barcode, Row
+`colors`        | expected technical batches (e.g. Barcode, Run)
+`labels` (optional) | the saved model
 
-The output projection depends on whether the fitting or prediction procedure is used in the `dascombat_shiny_fit_operator`. In case the fitting procedure is desired, the
-Shiny application will return a `model` and a `CmbCor` variable. In case the prediction procedure is desired, it will only return a `CmbCor` variable.
+The output relations depend on whether the fitting or prediction procedure is used. In case the fitting procedure is used, the
+Shiny application returns a `model` and a `CmbCor` variable. In case the prediction procedure is used, it will only return a `CmbCor` variable.
 
 Output relations|.
 ---|---
-`model`        | character, name of the DASCOMBAT model (to be used with other dascombat_prediction_operator)
-`CmbCor`       | list, the combat corrected values (`y-axis` in the input)
+`model`        | character, name of the DASCOMBAT model (to be used in the prediction step)
+`CmbCor`       | Combat-corrected values
 
-##### Screenshots
-![Example screenshot](/static/screenshot.PNG?raw=true "Example of application")
+##### Usage
+In the operator view, the batch effect removal can be assessed by inspecting the PCA before and after Combat.
+If the batch effect is removed, click on `Done`.
 
-##### Details
-
-This Shiny application can be used for fitting a DASCombat model to data, but also
-to apply this model on existing data.
-Details on the computation can be found in the `pamgene::pgbatch` and `SVA::combat`
-applications.
-
-##### See Also
-
-[dascombat_fit_operator](https://github.com/tercen/dascombat_fit_operator)
-, [dascombat_prediction_operator](https://github.com/tercen/dascombat_prediction_operator)
+An example of batch effect removal:
+![Example screenshot](/static/combat.png?raw=true "Example of application")
 

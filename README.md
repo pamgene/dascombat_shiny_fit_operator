@@ -6,7 +6,7 @@ The `dascombat_shiny_fit_operator` is a software developed at PamGene.
 There are two ways of usage:
 1. Model fitting and applying the model (prediction) is done in 1 step
 2. First model fitting is done on part of the data (usually control samples). Second, this fitted model is used to make predictions on the full dataset.
-In the first step, save the model with the `Return link to Combat model` option. In the second step, use the `Apply saved model` option to apply the fitted model.
+In the first step, save the model with the `Return link to Combat model` option. In the second step, use the `Apply saved model` option to apply the fitted model (add the `model` factor that was output from the fitting step as a label on the apply step).
 
 ##### Input projection and output relations
 The input projection depends on whether the fitting and prediction procedure is used at once or in two steps. The label is only required in the two-step procedure in the second step.
